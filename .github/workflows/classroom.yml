@@ -13,17 +13,28 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-    - name: Hola mundo
-      id: hola-mundo
+    - name: Complilacion
+      id: complilacion
       uses: classroom-resources/autograding-command-grader@v1
       with:
-        test-name: Hola mundo
-        setup-command: ''
-        command: make test
+        test-name: Complilacion
+        setup-command: sudo apt-get install -y build-essential
+        command: gcc main.c -o main
         timeout: 10
+        max-score: 1
+    - name: Ejecucion
+      id: ejecucion
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Ejecucion
+        setup-command: ''
+        command: "./main"
+        timeout: 10
+        max-score: 2
     - name: Autograding Reporter
       uses: classroom-resources/autograding-grading-reporter@v1
       env:
-        HOLA-MUNDO_RESULTS: "${{steps.hola-mundo.outputs.result}}"
+        COMPLILACION_RESULTS: "${{steps.complilacion.outputs.result}}"
+        EJECUCION_RESULTS: "${{steps.ejecucion.outputs.result}}"
       with:
-        runners: hola-mundo
+        runners: complilacion,ejecucion
